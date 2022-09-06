@@ -11,6 +11,7 @@ OBJ_PATH	= objects
 
 SRC =	main.c \
 		utils.c \
+		philo.c \
 
 all: $(NAME)
 
