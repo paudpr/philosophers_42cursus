@@ -8,15 +8,8 @@
 # include <pthread.h>
 # include <sys/time.h>
 
-typedef struct s_philos
-{
-	int id;
-	t_params *params;
 
-
-}	t_philos;
-
-typedef struct s_params
+typedef struct s_table
 {
 	int			n_philos;
 	int			t_die;
@@ -24,10 +17,22 @@ typedef struct s_params
 	int			t_sleep;
 	int			n_eat;
 	int			dead;
-	t_philos	*philos;
+	int			time_ref;
 	
-}	t_params;
+	struct s_philos	*philos;
+	
+}	t_table;
 
+typedef struct s_philos
+{
+	int id;
+
+	pthread_mutex_t	*left_f;
+	pthread_mutex_t	*right_f;
+	t_table *table;
+
+
+}	t_philos;
 
 // Utils
 int		ft_atoi(const char *str);
@@ -36,8 +41,9 @@ size_t	ft_strlen(const char *s);
 char	*ft_substr(char const *s, unsigned int start, size_t len);
 
 void *philo(void *arg);
-
-
-
+void init_table(t_table *table, int argc, char **argv);
+int ckeck_args(int argc, char **argv);
+int check_digit(char *argv);
+int check_size(char *argv);
 
 #endif

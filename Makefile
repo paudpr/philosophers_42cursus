@@ -10,8 +10,10 @@ SRC_PATH	= sources
 OBJ_PATH	= objects
 
 SRC =	main.c \
+		check_args.c \
 		utils.c \
 		philo.c \
+		
 
 all: $(NAME)
 
