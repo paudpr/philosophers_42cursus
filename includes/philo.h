@@ -16,9 +16,9 @@ typedef struct s_table
 	int			t_eat;
 	int			t_sleep;
 	int			n_eat;
-	int			dead;
 	int			time_ref;
-	
+	pthread_mutex_t	dead;
+	pthread_mutex_t	print;
 	struct s_philos	*philos;
 	
 }	t_table;
@@ -26,9 +26,10 @@ typedef struct s_table
 typedef struct s_philos
 {
 	int id;
-
+	int time;
+	int n_eaten;
+	pthread_t		id_thread;
 	pthread_mutex_t	*left_f;
-	pthread_mutex_t	*right_f;
 	t_table *table;
 
 
@@ -45,5 +46,6 @@ void init_table(t_table *table, int argc, char **argv);
 int ckeck_args(int argc, char **argv);
 int check_digit(char *argv);
 int check_size(char *argv);
+void do_threads(t_table *table);
 
 #endif

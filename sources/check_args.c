@@ -69,6 +69,29 @@ int ckeck_args(int argc, char **argv)
     return(1);
 }
 
+
+t_philos *init_philos(t_table *table)
+{
+	int i;
+	t_philos *philos;
+
+	philos = malloc((table->n_philos + 1) * sizeof(t_philos));
+	if (philos == NULL)
+		return (NULL);
+	i = 0;
+	while(i < table->n_philos)
+	{
+		philos[i].id = i + 1;
+		philos[i].time = table->time_ref;
+		philos[i].n_eaten = 0;
+		pthread_mutex_init(&philos[i].left_f, NULL);
+		philos[i].table = table;
+		i++;
+	}
+	return (philos);
+}
+
+
 void init_table(t_table *table, int argc, char **argv)
 {
 	int i;
@@ -83,10 +106,10 @@ void init_table(t_table *table, int argc, char **argv)
 	table->t_die = ft_atoi(argv[2]);
 	table->t_eat = ft_atoi(argv[3]);
 	table->t_sleep = ft_atoi(argv[4]);
+	table->n_eat = -1;
 	if(argc == 6)
 		table->n_eat = ft_atoi(argv[5]);
-	else
-		table->n_eat = -1;
-	table->dead = 0;
-	table->philos = malloc((table->n_philos + 1) * sizeof(t_philos));
+	pthread_mutex_init(&table->print, NULL);
+	pthread_mutex_init(&table->dead, NULL);
+	table->philos = init_philos(table);
 }
