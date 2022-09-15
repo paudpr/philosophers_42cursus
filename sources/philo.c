@@ -2,34 +2,21 @@
 
 void *philo(void *arg)
 {
-    t_table *table;
-    int i;
+    t_philos    *philo;
+    int i; 
 
-    table = (t_table *)arg;
-    i = -1;
-    while(++i < table->n_philos)
-        if(table->philos[i].id % 2 == 0)
-            usleep(500);
+    philo = (t_philos *)arg;
+    if(philo->id % 2 == 0)
+        usleep(500);
 
-    if(table->philos)
     // printf("TABLE %d %p %p %d\n", table->n_philos, table, table->philos, table->philos[1].id);
     // printf("%d\n", table->philos->id);
+    i = 0;
     while(1)
-    {
-        if(table->philos[0].id == 1)
-            printf(RED"soy filosofo 1\n"RESET);
-        if(table->philos[1].id == 2)
-            printf(CYAN"soy filosofo 2\n"RESET);
-        if(table->philos[2].id == 3)
-            printf(YELLOW"soy filosofo 3\n"RESET);
-        if(table->philos[3].id == 4)
-            printf(GREEN"soy filosofo 4\n"RESET);
+    {   
+        do_eat(philo);
+        do_sleep(philo->table);
     }
-
-
-
-
-
 
     return(0);
 
@@ -45,7 +32,7 @@ void do_threads(t_table *table)
 	// printf(" ORIGINAL TABLE %d %p %p %d\n", table->n_philos, table, table->philos, table->philos[1].id);
     while (i < table->n_philos)
     {
-        pthread_create(&table->philos[i].id_thread, NULL, &philo, table);
+        pthread_create(&table->philos[i].id_thread, NULL, &philo, &table->philos[i]);
         i++;
     }
     i = 0;
@@ -64,6 +51,82 @@ void do_threads(t_table *table)
 
 
 
+// void	check_dead(t_table *tab)
+// {
+// 	int	i;
+
+// 	while (!tab->eaten_all)
+// 	{
+// 		i = -1;
+// 		while (!tab->dead && ++i < tab->n_philos)
+// 		{
+// 			pthread_mutex_lock(&tab->check);
+// 			if (get_time() - tab->philos[i].last_eat > (size_t)tab->t_die)
+// 			{
+// 				print_msg(&tab->philos[i], MSG_RIP);
+// 				tab->dead = 1;
+// 			}
+// 			pthread_mutex_unlock(&tab->check);
+// 			usleep(100);
+// 		}
+// 		if (tab->dead)
+// 			break ;
+// 		i = 0;
+// 		while (tab->n_eat != -1 && i < tab->n_philos
+// 			&& tab->philos[i].eat_cnt >= tab->n_eat)
+// 			i++;
+// 		if (i == tab->n_philos)
+// 			tab->eaten_all = 1;
+// 	}
+// }
+
+// /* take forks and eat */
+// static void	philo_eat(t_philo *philo)
+// {
+// 	t_table	*tab;
+
+// 	tab = philo->tab;
+// 	pthread_mutex_lock(&philo->fork);
+// 	print_msg(philo, MSG_FORK);
+// 	if (philo->tab->n_philos == 1)
+// 	{
+// 		hypnos(tab, tab->t_die);
+// 		print_msg(philo, MSG_RIP);
+// 		pthread_mutex_unlock(&philo->fork);
+// 		tab->dead = 1;
+// 		return ;
+// 	}
+// 	pthread_mutex_lock(&philo->r_philo->fork);
+// 	print_msg(philo, MSG_FORK);
+// 	pthread_mutex_lock(&tab->check);
+// 	philo->eat_cnt++;
+// 	print_msg(philo, MSG_EAT);
+// 	philo->last_eat = get_time();
+// 	pthread_mutex_unlock(&tab->check);
+// 	hypnos(tab, tab->t_eat);
+// 	pthread_mutex_unlock(&philo->fork);
+// 	pthread_mutex_unlock(&philo->r_philo->fork);
+// }
+
+// /* philosophers life cicle */
+// void	*philo_life(void *arg)
+// {
+// 	t_philo	*philo;
+// 	t_table	*tab;
+
+// 	philo = (t_philo *)arg;
+// 	tab = philo->tab;
+// 	if (philo->id % 2 == 0)
+// 		usleep(1000);
+// 	while (!tab->dead && !tab->eaten_all)
+// 	{
+// 		philo_eat(philo);
+// 		print_msg(philo, MSG_SLP);
+// 		hypnos(tab, tab->t_slp);
+// 		print_msg(philo, MSG_THK);
+// 	}
+// 	return (NULL);
+// }
 
 
 
