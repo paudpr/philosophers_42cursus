@@ -40,7 +40,7 @@ int main(int argc, char **argv)
 	gettimeofday(&time, NULL);
 	table.time_ref = (time.tv_sec * 1000) + (time.tv_usec / 1000);
 	init_table(&table, argc, argv);
-
+	// printf("TABLE %d %p %p %d\n", table->n_philos, &table, table->philos, table->philos[1].id);
 
 	do_threads(&table);
 	// prueba_threads(thread, &table);

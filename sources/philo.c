@@ -3,9 +3,28 @@
 void *philo(void *arg)
 {
     t_table *table;
+    int i;
 
     table = (t_table *)arg;
-    
+    i = -1;
+    while(++i < table->n_philos)
+        if(table->philos[i].id % 2 == 0)
+            usleep(500);
+
+    if(table->philos)
+    // printf("TABLE %d %p %p %d\n", table->n_philos, table, table->philos, table->philos[1].id);
+    // printf("%d\n", table->philos->id);
+    while(1)
+    {
+        if(table->philos[0].id == 1)
+            printf(RED"soy filosofo 1\n"RESET);
+        if(table->philos[1].id == 2)
+            printf(CYAN"soy filosofo 2\n"RESET);
+        if(table->philos[2].id == 3)
+            printf(YELLOW"soy filosofo 3\n"RESET);
+        if(table->philos[3].id == 4)
+            printf(GREEN"soy filosofo 4\n"RESET);
+    }
 
 
 
@@ -13,6 +32,7 @@ void *philo(void *arg)
 
 
     return(0);
+
 }
 
 
@@ -20,56 +40,26 @@ void *philo(void *arg)
 void do_threads(t_table *table)
 {
     int i;
-    pthread_t *thread;
 
-    thread = malloc(sizeof(pthread_t) * table->n_philos);
-	if(thread == NULL)
-		return ;
     i = 0;
+	// printf(" ORIGINAL TABLE %d %p %p %d\n", table->n_philos, table, table->philos, table->philos[1].id);
     while (i < table->n_philos)
     {
-        pthread_create(&table->philos[i].id_thread, NULL, &philo, &table);
+        pthread_create(&table->philos[i].id_thread, NULL, &philo, table);
         i++;
     }
-    free(thread);
+    i = 0;
+   	while(i < table->n_philos)
+	{
+        // printf("%d\n", i);
+		pthread_join(table->philos[i].id_thread, NULL);
+		i++;
+	}
 }
 
 
 
 
-
-
-
-
-
-
-
-// static void	initialise_tab(t_table *tab)
-// {
-// 	int	i;
-
-// 	tab->dead = 0;
-// 	tab->eaten_all = 0;
-// 	tab->philos = (t_philo *)malloc(tab->n_philos * sizeof(t_philo));
-// 	i = -1;
-// 	while (++i < tab->n_philos)
-// 	{
-// 		tab->philos[i].id = i + 1;
-// 		tab->philos[i].tab = tab;
-// 		tab->philos[i].eat_cnt = 0;
-// 		if (i + 1 == tab->n_philos)
-// 			tab->philos[i].r_philo = &tab->philos[0];
-// 		else
-// 			tab->philos[i].r_philo = &tab->philos[i + 1];
-// 		if (i == 0)
-// 			tab->philos[i].l_philo = &tab->philos[tab->n_philos - 1];
-// 		else
-// 			tab->philos[i].l_philo = &tab->philos[i - 1];
-// 		pthread_mutex_init(&tab->philos[i].fork, NULL);
-// 	}
-// 	pthread_mutex_init(&tab->print, NULL);
-// 	pthread_mutex_init(&tab->check, NULL);
-// }
 
 
 

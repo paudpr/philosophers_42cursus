@@ -88,6 +88,7 @@ t_philos *init_philos(t_table *table)
 		philos[i].table = table;
 		i++;
 	}
+	// printf("-->philo %p\n", philo);
 	return (philos);
 }
 
@@ -106,10 +107,12 @@ void init_table(t_table *table, int argc, char **argv)
 	table->t_die = ft_atoi(argv[2]);
 	table->t_eat = ft_atoi(argv[3]);
 	table->t_sleep = ft_atoi(argv[4]);
+	table->check_dead = 0;
 	table->n_eat = -1;
 	if(argc == 6)
 		table->n_eat = ft_atoi(argv[5]);
 	pthread_mutex_init(&table->print, NULL);
-	pthread_mutex_init(&table->dead, NULL);
+	// pthread_mutex_init(&table->dead, NULL);
 	table->philos = init_philos(table);
+	// printf("--> table philo %p     %p\n", &table, table->philos);
 }

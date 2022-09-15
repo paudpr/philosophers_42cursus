@@ -1,6 +1,21 @@
 #ifndef PHILO_H
 # define PHILO_H
 
+
+
+# define RED "\033[1;31m"
+# define GREEN "\033[1;32m"
+# define CYAN "\033[1;36m"
+# define GREY "\033[1;90m"
+# define YELLOW "\033[1;33m"
+# define MAGENTA "\033[1;35m"
+# define RESET "\033[0m"
+
+
+
+
+
+
 # include <stdio.h>
 # include <stdlib.h>
 # include <unistd.h>
@@ -17,7 +32,8 @@ typedef struct s_table
 	int			t_sleep;
 	int			n_eat;
 	int			time_ref;
-	pthread_mutex_t	dead;
+	int			check_dead;
+	// pthread_mutex_t	dead;
 	pthread_mutex_t	print;
 	struct s_philos	*philos;
 	
@@ -29,7 +45,7 @@ typedef struct s_philos
 	int time;
 	int n_eaten;
 	pthread_t		id_thread;
-	pthread_mutex_t	*left_f;
+	pthread_mutex_t	left_f;
 	t_table *table;
 
 
