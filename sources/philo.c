@@ -1,5 +1,31 @@
 #include "philo.h"
 
+void do_eat(t_philos *philo)
+{
+    t_table *table;
+
+
+    table = philo->table;
+    pthread_mutex_lock(&philo->left_f);
+    ////printear mensaje de coger tenedor
+
+    pthread_mutex_lock(&philo->right_philo->left_f);
+    //// printear mensaje de coger otro tenedor
+    philo->n_eaten++;
+    ///printear mensaje de comer
+
+    ////comprobar que no están muertos?????
+
+    ///registrar paso del tiempo
+
+    pthread_mutex_unlock(&philo->left_f);
+    pthread_mutex_unlock(&philo->right_philo->left_f);
+}
+
+
+
+
+
 void *philo(void *arg)
 {
     t_philos    *philo;
@@ -14,8 +40,9 @@ void *philo(void *arg)
     i = 0;
     while(1)
     {   
-        do_eat(philo);
+        do_eat(&philo[philo->id - 1]);
         do_sleep(philo->table);
+    
     }
 
     return(0);

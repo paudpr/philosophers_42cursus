@@ -84,6 +84,10 @@ t_philos *init_philos(t_table *table)
 		philos[i].id = i + 1;
 		philos[i].time = table->time_ref;
 		philos[i].n_eaten = 0;
+		if(i == 0)
+			philos[i].right_philo = &philos[table->n_philos - 1];
+		else
+			philos[i].right_philo = &philos[i - 1];
 		pthread_mutex_init(&philos[i].left_f, NULL);
 		philos[i].table = table;
 		i++;

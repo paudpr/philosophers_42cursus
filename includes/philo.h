@@ -14,8 +14,6 @@
 
 
 
-
-
 # include <stdio.h>
 # include <stdlib.h>
 # include <unistd.h>
@@ -45,6 +43,7 @@ typedef struct s_philos
 	int time;
 	int n_eaten;
 	pthread_t		id_thread;
+	struct s_philos	*right_philo;
 	pthread_mutex_t	left_f;
 	t_table *table;
 
