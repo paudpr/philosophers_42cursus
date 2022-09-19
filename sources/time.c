@@ -6,15 +6,7 @@
 
 
 
-useconds_t	ft_get_time(void)
-{
-	useconds_t		current_time;
-	struct timeval	start;
 
-	gettimeofday(&start, NULL);
-	current_time = (start.tv_sec) * 1000 + (start.tv_usec) / 1000;
-	return (current_time);
-}
 
 useconds_t	time_diff(useconds_t present, useconds_t past)
 {

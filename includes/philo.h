@@ -11,7 +11,11 @@
 # define MAGENTA "\033[1;35m"
 # define RESET "\033[0m"
 
-
+# define EAT 1
+# define SLEEP 2
+# define THINK 3
+# define DIE 4
+# define FORK 5
 
 
 # include <stdio.h>

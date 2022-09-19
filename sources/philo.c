@@ -1,30 +1,54 @@
 #include "philo.h"
 
+int	get_time(void)
+{
+	useconds_t		current_time;
+	struct timeval	start;
+
+	gettimeofday(&start, NULL);
+	current_time = (start.tv_sec) * 1000 + (start.tv_usec) / 1000;
+	return (current_time);
+}
+
+void do_think(t_table *table)
+{
+    int time;
+
+    time = get_time();
+    while(table->check_dead == 0)
+    {
+        if(get_time() - time >= table->t_die)
+            break ;
+        usleep(100);
+    }
+}
+
 void do_eat(t_philos *philo)
 {
     t_table *table;
 
-
     table = philo->table;
     pthread_mutex_lock(&philo->left_f);
-    ////printear mensaje de coger tenedor
-
+    do_print(table, FORK); //has taken a fork
+    if(table->n_philos == 1)
+    {
+        do_think(table);
+        do_print(table, DIE);
+        pthread_mutex_unlock(&philo->left_f);
+        table->check_dead = 1;
+        return ;
+    }
     pthread_mutex_lock(&philo->right_philo->left_f);
-    //// printear mensaje de coger otro tenedor
+    do_print(table, FORK);
+    pthread_mutex_lock(&table->check_dead);
+    do_print(table, EAT);
+    philo->time = get_time();
+    pthread_mutex_unlock(&table->check_dead);
+    do_think(table);
     philo->n_eaten++;
-    ///printear mensaje de comer
-
-    ////comprobar que no están muertos?????
-
-    ///registrar paso del tiempo
-
     pthread_mutex_unlock(&philo->left_f);
     pthread_mutex_unlock(&philo->right_philo->left_f);
 }
-
-
-
-
 
 void *philo(void *arg)
 {
@@ -44,12 +68,8 @@ void *philo(void *arg)
         do_sleep(philo->table);
     
     }
-
     return(0);
-
 }
-
-
 
 void do_threads(t_table *table)
 {
