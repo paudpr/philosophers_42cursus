@@ -1,5 +1,34 @@
 #include "philo.h"
 
+void	print_text(t_philos *philo, int type)
+{
+	if(type == 1)
+		printf(YELLOW"Philo %d is eating"RESET, philo->id);
+	else if (type == 2)
+		printf(GREEN"Philo %d is sleeping"RESET, philo->id);
+	else if(type == 3)
+		printf(CYAN"Philo %d is thinking"RESET, philo->id);
+	else if(type == 4)
+		printf(RED"Philo %d is DEAD"RESET, philo->id);
+	else if(type == 5)
+		printf(CYAN"Philo %d has taken a fork"RESET, philo->id);
+}
+
+void	do_print(t_philos *philo, int type)
+{
+	int time;
+
+	time = get_time() - philo->table->time_ref;
+	pthread_mutex_lock(&philo->table->print);
+	if(philo->table->check_dead == 0)
+	{
+		printf("%d ms  ", time);
+		print_text(philo, type);
+		printf("\n");
+	}
+	pthread_mutex_unlock(&philo->table->print);
+}
+
 int	get_time(void)
 {
 	useconds_t		current_time;
@@ -12,80 +41,157 @@ int	get_time(void)
 
 void do_think(t_table *table)
 {
-    int time;
+	int time;
 
-    time = get_time();
-    while(table->check_dead == 0)
-    {
-        if(get_time() - time >= table->t_die)
-            break ;
-        usleep(100);
-    }
+	time = get_time();
+	while(table->check_dead == 0)
+	{
+		if(get_time() - time >= table->t_die)
+			break ;
+		usleep(100);
+	}
 }
+
+void do_sleep(t_philos *philo)
+{
+	int time;
+
+	do_print(philo, SLEEP);
+	time = get_time();
+	while(philo->table->check_dead == 0)
+	{
+		if(get_time() - time >= philo->table->t_sleep)
+			break ;
+		usleep(100);
+	}
+}
+
 
 void do_eat(t_philos *philo)
 {
-    t_table *table;
+	t_table *table;
 
-    table = philo->table;
-    pthread_mutex_lock(&philo->left_f);
-    do_print(table, FORK); //has taken a fork
-    if(table->n_philos == 1)
-    {
-        do_think(table);
-        do_print(table, DIE);
-        pthread_mutex_unlock(&philo->left_f);
-        table->check_dead = 1;
-        return ;
-    }
-    pthread_mutex_lock(&philo->right_philo->left_f);
-    do_print(table, FORK);
-    pthread_mutex_lock(&table->check_dead);
-    do_print(table, EAT);
-    philo->time = get_time();
-    pthread_mutex_unlock(&table->check_dead);
-    do_think(table);
-    philo->n_eaten++;
-    pthread_mutex_unlock(&philo->left_f);
-    pthread_mutex_unlock(&philo->right_philo->left_f);
+	table = philo->table;
+	// printf(CYAN"PHILO %d   %p	%p\n"RESET,philo->id, philo->table, table);
+	// printf("******** TABLE %d %p %p %d\n", table->n_philos, table, table->philos, table->philos[0].id);
+	pthread_mutex_lock(&philo->left_f);
+	do_print(philo, FORK); //has taken a fork
+	if(table->n_philos == 1)
+	{
+		do_think(table);
+		do_print(philo, DIE);
+		pthread_mutex_unlock(&philo->left_f);
+		table->check_dead = 1;
+		return ;
+	}
+	pthread_mutex_lock(&philo->right_philo->left_f);
+	do_print(philo, FORK);
+	pthread_mutex_lock(&table->dead);
+	do_print(philo, EAT);
+	philo->time = get_time();
+	pthread_mutex_unlock(&table->dead);
+	do_think(table);
+	philo->n_eaten++;
+	if(philo->n_eaten == philo->table->n_eat)
+		philo->table->n_eaten++;
+	pthread_mutex_unlock(&philo->left_f);
+	pthread_mutex_unlock(&philo->right_philo->left_f);
 }
 
-void *philo(void *arg)
+// void check_deaths(t_table *table)
+// {
+// 	int i;
+
+// 	if(table->n_eaten < table->n_eat)
+// 	{
+// 		if(table->check_dead == 0)
+// 		{
+// 			pthread_mutex_lock(&table->check_dead);
+// 			if(get_time() - philo->time > philo->table->t_die)
+// 			{
+// 				do_print(philo, DIE);
+// 				philo->table->check_dead = 1;
+// 			}
+// 			pthread_mutex_unlock(&table->check_dead);
+// 		}
+//         if(table->n_eat != -1 && )
+		
+// 	}
+// }
+
+
+
+// void	check_dead(t_table *tab)
+// {
+// 	int	i;
+
+// 	while (!tab->eaten_all)
+// 	{
+// 		i = -1;
+// 		while (!tab->dead && ++i < tab->n_philos)
+// 		{
+// 			pthread_mutex_lock(&tab->check);
+// 			if (get_time() - tab->philos[i].last_eat > (size_t)tab->t_die)
+// 			{
+// 				print_msg(&tab->philos[i], MSG_RIP);
+// 				tab->dead = 1;
+// 			}
+// 			pthread_mutex_unlock(&tab->check);
+// 			usleep(100);
+// 		}
+// 		if (tab->dead)
+// 			break ;
+// 		i = 0;
+// 		while (tab->n_eat != -1 && i < tab->n_philos
+// 			&& tab->philos[i].eat_cnt >= tab->n_eat)
+// 			i++;
+// 		if (i == tab->n_philos)
+// 			tab->eaten_all = 1;
+// 	}
+// }
+
+
+
+
+
+
+void *do_philo(void *arg)
 {
-    t_philos    *philo;
-    int i; 
+	t_philos	*philo;
 
-    philo = (t_philos *)arg;
-    if(philo->id % 2 == 0)
-        usleep(500);
+	philo = (t_philos *)arg;
+	if(philo->id % 2 == 0)
+		usleep(500);
 
-    // printf("TABLE %d %p %p %d\n", table->n_philos, table, table->philos, table->philos[1].id);
-    // printf("%d\n", table->philos->id);
-    i = 0;
-    while(1)
-    {   
-        do_eat(&philo[philo->id - 1]);
-        do_sleep(philo->table);
-    
-    }
-    return(0);
+	// printf("________ TABLE %d %p %p %d\n", philo->table->n_philos, philo->table, philo->table->philos, philo->table->philos[0].id);
+	// printf("%d\n", table->philos->id);
+	while(1)
+	{   
+		// printf(CYAN"PHILO	%d\n"RESET, philo[philo->id - 1].id);
+		do_eat(philo);
+		do_sleep(philo);
+
+
+
+		// AQUI HHACER DO_CHECKS y compruebas las muertes y las veces que han comido
+	}
+	return(0);
 }
 
 void do_threads(t_table *table)
 {
-    int i;
+	int i;
 
-    i = 0;
-	// printf(" ORIGINAL TABLE %d %p %p %d\n", table->n_philos, table, table->philos, table->philos[1].id);
-    while (i < table->n_philos)
-    {
-        pthread_create(&table->philos[i].id_thread, NULL, &philo, &table->philos[i]);
-        i++;
-    }
-    i = 0;
+	i = 0;
+	// printf("ORIGINAL TABLE %d %p %p %d\n", table->n_philos, table, table->philos, table->philos[0].id);
+	while (i < table->n_philos)
+	{
+		pthread_create(&table->philos[i].id_thread, NULL, &do_philo, &table->philos[i]);
+		i++;
+	}
+	i = 0;
    	while(i < table->n_philos)
 	{
-        // printf("%d\n", i);
 		pthread_join(table->philos[i].id_thread, NULL);
 		i++;
 	}
@@ -95,6 +201,45 @@ void do_threads(t_table *table)
 
 
 
+
+
+
+
+
+
+
+
+
+
+// void get_forks(t_table *table)
+// {
+//	 int index_left;
+//	 int index_right;
+
+//	 if(table->philos->id == table->n_philos )
+//	 {
+//		 index_left = 1;
+//		 index_right = table->philos->id;
+//	 }
+//	 else
+//	 {
+//		 index_left = table->philos->id + 1;
+//		 index_right = table->philos->id;
+//	 }
+//	 pthread_mutex_lock(mutex[table->philo[index_left]);
+//	 eat();
+//	 pthread_mutex_unlock(mutex[table->philo[index_left]);
+// }
+
+
+
+// void eat()
+// {
+//	 comprobar veces comidas
+//	 imprimir mensaje de comer
+//	 pasar tiempo de comer
+
+// }
 
 
 
@@ -175,6 +320,18 @@ void do_threads(t_table *table)
 // 	return (NULL);
 // }
 
+// void	hypnos(t_table *tab, size_t t_slp)
+// {
+// 	size_t	t;
+
+// 	t = get_time();
+// 	while (!(tab->dead))
+// 	{
+// 		if (get_time() - t >= t_slp)
+// 			break ;
+// 		usleep(100);
+// 	}
+// }
 
 
 
@@ -213,37 +370,6 @@ void do_threads(t_table *table)
 
 
 
-
-
-// void get_forks(t_table *table)
-// {
-//     int index_left;
-//     int index_right;
-
-//     if(table->philos->id == table->n_philos )
-//     {
-//         index_left = 1;
-//         index_right = table->philos->id;
-//     }
-//     else
-//     {
-//         index_left = table->philos->id + 1;
-//         index_right = table->philos->id;
-//     }
-//     pthread_mutex_lock(mutex[table->philo[index_left]);
-//     eat();
-//     pthread_mutex_unlock(mutex[table->philo[index_left]);
-// }
-
-
-
-// void eat()
-// {
-//     comprobar veces comidas
-//     imprimir mensaje de comer
-//     pasar tiempo de comer
-
-// }
 
 
 

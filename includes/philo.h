@@ -33,9 +33,10 @@ typedef struct s_table
 	int			t_eat;
 	int			t_sleep;
 	int			n_eat;
+	int			n_eaten;
 	int			time_ref;
 	int			check_dead;
-	// pthread_mutex_t	dead;
+	pthread_mutex_t	dead;
 	pthread_mutex_t	print;
 	struct s_philos	*philos;
 	
@@ -60,11 +61,12 @@ int		ft_isdigit(int c);
 size_t	ft_strlen(const char *s);
 char	*ft_substr(char const *s, unsigned int start, size_t len);
 
-void *philo(void *arg);
+void *do_philo(void *arg);
 void init_table(t_table *table, int argc, char **argv);
 int ckeck_args(int argc, char **argv);
 int check_digit(char *argv);
 int check_size(char *argv);
 void do_threads(t_table *table);
+int	get_time(void);
 
 #endif
