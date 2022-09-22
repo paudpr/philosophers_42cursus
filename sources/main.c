@@ -43,7 +43,7 @@ int main(int argc, char **argv)
 	// printf("TABLE %d %p %p %d\n", table->n_philos, &table, table->philos, table->philos[1].id);
 
 	do_threads(&table);
-	// check_deaths(&table);
+	
 	// prueba_threads(thread, &table);
 	// system("leaks -q philo");
 	return (0);

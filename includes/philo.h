@@ -33,7 +33,6 @@ typedef struct s_table
 	int			t_eat;
 	int			t_sleep;
 	int			n_eat;
-	int			n_eaten;
 	int			time_ref;
 	int			check_dead;
 	pthread_mutex_t	dead;

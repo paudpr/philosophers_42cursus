@@ -92,68 +92,53 @@ void do_eat(t_philos *philo)
 	pthread_mutex_unlock(&table->dead);
 	do_think(table);
 	philo->n_eaten++;
-	if(philo->n_eaten == philo->table->n_eat)
-		philo->table->n_eaten++;
 	pthread_mutex_unlock(&philo->left_f);
 	pthread_mutex_unlock(&philo->right_philo->left_f);
 }
 
-// void check_deaths(t_table *table)
-// {
-// 	int i;
+void check_deaths(t_table *table)
+{
+	int i;
 
-// 	if(table->n_eaten < table->n_eat)
-// 	{
-// 		if(table->check_dead == 0)
-// 		{
-// 			pthread_mutex_lock(&table->check_dead);
-// 			if(get_time() - philo->time > philo->table->t_die)
-// 			{
-// 				do_print(philo, DIE);
-// 				philo->table->check_dead = 1;
-// 			}
-// 			pthread_mutex_unlock(&table->check_dead);
-// 		}
-//         if(table->n_eat != -1 && )
+	if(table->n_eaten < table->n_eat)
+	{
+		if(table->check_dead == 0)
+		{
+			pthread_mutex_lock(&table->check_dead);
+			if(get_time() - philo->time > philo->table->t_die)
+			{
+				do_print(philo, DIE);
+				philo->table->check_dead = 1;
+			}
+			pthread_mutex_unlock(&table->check_dead);
+		}
+        if(table->n_eat != -1 && )
 		
-// 	}
-// }
-
-
-
-// void	check_dead(t_table *tab)
-// {
-// 	int	i;
-
-// 	while (!tab->eaten_all)
-// 	{
-// 		i = -1;
-// 		while (!tab->dead && ++i < tab->n_philos)
-// 		{
-// 			pthread_mutex_lock(&tab->check);
-// 			if (get_time() - tab->philos[i].last_eat > (size_t)tab->t_die)
-// 			{
-// 				print_msg(&tab->philos[i], MSG_RIP);
-// 				tab->dead = 1;
-// 			}
-// 			pthread_mutex_unlock(&tab->check);
-// 			usleep(100);
-// 		}
-// 		if (tab->dead)
-// 			break ;
-// 		i = 0;
-// 		while (tab->n_eat != -1 && i < tab->n_philos
-// 			&& tab->philos[i].eat_cnt >= tab->n_eat)
-// 			i++;
-// 		if (i == tab->n_philos)
-// 			tab->eaten_all = 1;
-// 	}
-// }
+	}
+}
 
 
 
 
+static int check_eaten(t_philos *philo)
+{
+	if(philo->table->n_eat == -1)
+		return(1);
+	if(philo->table->n_eat > philo->n_eaten)
+		return(1);
+	return(0);
+}
 
+static int check_lives(t_philos *philo)
+{
+	pthread_mutex_lock(&philo->table->dead);
+	if(philo->table->check_dead == 0)
+	{
+		pthread_mutex_unlock(&philo->table->dead);
+		return (1);
+	}
+	return (0);
+}
 
 void *do_philo(void *arg)
 {
@@ -162,18 +147,13 @@ void *do_philo(void *arg)
 	philo = (t_philos *)arg;
 	if(philo->id % 2 == 0)
 		usleep(500);
-
-	// printf("________ TABLE %d %p %p %d\n", philo->table->n_philos, philo->table, philo->table->philos, philo->table->philos[0].id);
-	// printf("%d\n", table->philos->id);
-	while(1)
+	while(check_lives(philo) == 1)
 	{   
-		// printf(CYAN"PHILO	%d\n"RESET, philo[philo->id - 1].id);
 		do_eat(philo);
 		do_sleep(philo);
-
-
-
-		// AQUI HHACER DO_CHECKS y compruebas las muertes y las veces que han comido
+		do_print(philo, THINK);
+		if(check_eaten(philo) != 1)
+			break ;
 	}
 	return(0);
 }
@@ -189,6 +169,7 @@ void do_threads(t_table *table)
 		pthread_create(&table->philos[i].id_thread, NULL, &do_philo, &table->philos[i]);
 		i++;
 	}
+	check_deaths(&table);
 	i = 0;
    	while(i < table->n_philos)
 	{
