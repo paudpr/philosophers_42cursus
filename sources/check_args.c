@@ -114,6 +114,7 @@ void init_table(t_table *table, int argc, char **argv)
 	table->t_sleep = ft_atoi(argv[4]);
 	table->check_dead = 0;
 	table->n_eat = -1;
+	table->all_eaten = 0;
 	if(argc == 6)
 		table->n_eat = ft_atoi(argv[5]);
 	pthread_mutex_init(&table->print, NULL);

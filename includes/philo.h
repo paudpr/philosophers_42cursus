@@ -6,6 +6,7 @@
 # define RED "\033[1;31m"
 # define GREEN "\033[1;32m"
 # define CYAN "\033[1;36m"
+# define BLUE "\033[0;34m"
 # define GREY "\033[1;90m"
 # define YELLOW "\033[1;33m"
 # define MAGENTA "\033[1;35m"
@@ -33,6 +34,7 @@ typedef struct s_table
 	int			t_eat;
 	int			t_sleep;
 	int			n_eat;
+	int			all_eaten;
 	int			time_ref;
 	int			check_dead;
 	pthread_mutex_t	dead;
