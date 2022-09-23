@@ -65,13 +65,13 @@ void do_eat(t_philos *philo)
 		do_print(philo, DIE);
 		pthread_mutex_unlock(&philo->left_f);
 		table->check_dead = 1;
-		printf("TERmino bucle 1 philo\n");
+		// printf("TERmino bucle 1 philo\n");
 		return ;
 	}
 	pthread_mutex_lock(&philo->right_philo->left_f);
 	do_print(philo, FORK);
 	pthread_mutex_lock(&table->dead);
-	printf("philo %d -> %d         %d\n", philo->id, philo->time - get_time(), philo->n_eaten);
+	// printf("philo %d -> %d         %d\n", philo->id, philo->time - get_time(), philo->n_eaten);
 	do_print(philo, EAT);
 	philo->time = get_time();
 	philo->n_eaten++;
@@ -111,7 +111,7 @@ void check_deaths(t_table *table)
 
 	all_eaten = 0;
 	all_alive = 0;
-	fprintf(stderr, "Aqui entra perra");
+	// fprintf(stderr, "Aqui entra perra y al parecer si sale\n");
 	while(all_alive == 0 && all_eaten == 0)
 	{
 		i = 0;
@@ -119,10 +119,12 @@ void check_deaths(t_table *table)
 		{
 			all_alive = check_alive(&table->philos[i]);
 			all_eaten = check_food(&table->philos[i]);
+			// fprintf(stderr, "%d    %d \n", all_alive, all_eaten);
 			if(all_alive != 0 || all_eaten != 0)
 				break ;
 			i++;
 		}
+		// fprintf(stderr, "ha acabado el bucle interno\n");
 	}
 	if(all_alive != 0)
 		do_print(&table->philos[i], DIE);
@@ -145,6 +147,7 @@ static int check_lives(t_philos *philo)
 		pthread_mutex_unlock(&philo->table->dead);
 		return (1);
 	}
+	pthread_mutex_unlock(&philo->table->dead);
 	return (0);
 }
 
@@ -164,7 +167,6 @@ void *do_philo(void *arg)
 		if(check_eaten(philo) != 1)
 			break ;
 	}
-	printf("termino funcion do_philo\n");
 	return(philo);
 }
 
@@ -173,20 +175,16 @@ void do_threads(t_table *table)
 	int i;
 
 	i = 0;
-	// printf("ORIGINAL TABLE %d %p %p %d\n", table->n_philos, table, table->philos, table->philos[0].id);
 	while (i < table->n_philos)
 	{
 		pthread_create(&table->philos[i].id_thread, NULL, &do_philo, &table->philos[i]);
 		i++;
 	}
-	printf("termino bucle do_threads\n");
 	check_deaths(table);
 	i = 0;
-	printf("despues de comprobar muertes\n");
    	while(i < table->n_philos)
 	{
 		pthread_join(table->philos[i].id_thread, NULL);
 		i++;
 	}
-	printf("termino bucle do_joins\n");
 }
