@@ -13,6 +13,10 @@ SRC =	main.c \
 		check_args.c \
 		utils.c \
 		philo.c \
+		check_deaths.c \
+		do_.c \
+		init.c \
+		print.c \
 		
 
 all: $(NAME)
