@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   check_args.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: pdel-pin <pdel-pin@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/09/23 16:13:50 by pdel-pin          #+#    #+#             */
+/*   Updated: 2022/09/23 16:13:51 by pdel-pin         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "philo.h"
 
 static int	ft_len_digit(int num)
@@ -59,7 +71,7 @@ int	ckeck_args(int argc, char **argv)
 	if (argc < 5 || argc > 6)
 	{
 		printf("Error: number of arguments must be between 4 and 5\n");
-		exit(0);
+		return (0);
 	}
 	i = 1;
 	while (i < argc)

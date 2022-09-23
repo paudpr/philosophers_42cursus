@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   philo.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: pdel-pin <pdel-pin@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/09/23 16:13:48 by pdel-pin          #+#    #+#             */
+/*   Updated: 2022/09/23 16:13:49 by pdel-pin         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "philo.h"
 
 static int	check_eaten(t_philos *philo)
@@ -35,6 +47,7 @@ void	do_threads(t_table *table)
 	i = 0;
 	while (i < table->n_philos)
 	{
+		init_philos(table, i);
 		pthread_create(&table->philos[i].id_thread,
 			NULL, &do_philo, &table->philos[i]);
 		i++;

@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   philo.h                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: pdel-pin <pdel-pin@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/09/23 16:13:44 by pdel-pin          #+#    #+#             */
+/*   Updated: 2022/09/23 16:13:45 by pdel-pin         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef PHILO_H
 # define PHILO_H
 
@@ -54,10 +66,10 @@ typedef struct s_philos
 }	t_philos;
 
 /* Functions */
-int		init_table(t_table *table, int argc, char **argv);
-t_philos	*init_philos(t_table *table);
+int			init_table(t_table *table, int argc, char **argv);
+void		init_philos(t_table *table, int i);
 int			ckeck_args(int argc, char **argv);
-void 		close_philos(t_table *table);
+void		close_philos(t_table *table);
 
 void		do_threads(t_table *table);
 void		*do_philo(void *arg);

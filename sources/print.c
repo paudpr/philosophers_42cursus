@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   print.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: pdel-pin <pdel-pin@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/09/23 16:13:59 by pdel-pin          #+#    #+#             */
+/*   Updated: 2022/09/23 16:14:00 by pdel-pin         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "philo.h"
 
 static void	print_text(t_philos *philo, int type)
@@ -9,7 +21,7 @@ static void	print_text(t_philos *philo, int type)
 	else if (type == 3)
 		printf(L_BLUE"Philo %d is thinking"RESET, philo->id);
 	else if (type == 4)
-		printf(D_RED"Philo %d is DEAD"RESET, philo->id);
+		printf(RED"Philo %d is DEAD"RESET, philo->id);
 	else if (type == 5)
 		printf(CYAN"Philo %d has taken a fork"RESET, philo->id);
 }
