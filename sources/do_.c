@@ -6,7 +6,7 @@
 /*   By: pdel-pin <pdel-pin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/23 16:13:52 by pdel-pin          #+#    #+#             */
-/*   Updated: 2022/09/23 16:13:53 by pdel-pin         ###   ########.fr       */
+/*   Updated: 2022/09/27 15:01:17 by pdel-pin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,12 +22,12 @@ int	get_time(void)
 	return (current_time);
 }
 
-void	do_wait(t_table *table, int time)
+void	do_wait(t_philos *philo, int time)
 {
 	int	time_now;
 
 	time_now = get_time();
-	while (table->check_dead == 0)
+	while (check_if_dead(philo) == 0)
 	{
 		if (get_time() - time_now >= time)
 			break ;
@@ -44,7 +44,7 @@ void	do_eat(t_philos *philo)
 	do_print(philo, FORK);
 	if (table->n_philos == 1)
 	{
-		do_wait(table, philo->table->t_die);
+		do_wait(philo, philo->table->t_die);
 		do_print(philo, DIE);
 		pthread_mutex_unlock(&philo->left_f);
 		table->check_dead = 1;
@@ -57,7 +57,7 @@ void	do_eat(t_philos *philo)
 	philo->time = get_time();
 	philo->n_eaten++;
 	pthread_mutex_unlock(&table->dead);
-	do_wait(table, philo->table->t_eat);
+	do_wait(philo, philo->table->t_eat);
 	pthread_mutex_unlock(&philo->left_f);
 	pthread_mutex_unlock(&philo->right_philo->left_f);
 }

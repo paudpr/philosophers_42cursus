@@ -1,3 +1,15 @@
+# **************************************************************************** #
+#                                                                              #
+#                                                         :::      ::::::::    #
+#    Makefile                                           :+:      :+:    :+:    #
+#                                                     +:+ +:+         +:+      #
+#    By: pdel-pin <pdel-pin@student.42.fr>          +#+  +:+       +#+         #
+#                                                 +#+#+#+#+#+   +#+            #
+#    Created: 2022/09/23 16:20:07 by pdel-pin          #+#    #+#              #
+#    Updated: 2022/09/27 14:32:16 by pdel-pin         ###   ########.fr        #
+#                                                                              #
+# **************************************************************************** #
+
 NAME = philo
 
 CC = gcc
@@ -40,21 +52,21 @@ $(NAME): $(OBJS)
 
 ##RULES
 
-debug: CFLAGS +=  -g3 -fsanitize=address
+debug: CFLAGS +=  -g3 -fsanitize=thread
 debug: $(NAME)
 
 debug_bonus: CFLAGS +=  -g3 -fsanitize=address
+debug_bonus: $(NAME)
 
 norminette:
 	norminette $(SRCS) 
 
 clean:
-	rm -rf $(OBJ_PATH) /tmp/relink
+	rm -rf $(OBJ_PATH)
 
 fclean: clean
 		rm -rf $(NAME) 
-		rm -rf $(OBJ_PATH)
 
 re: fclean all
 
-PHONY.: all clean fclean re norminette bonus
+.PHONY: all clean fclean re norminette bonus

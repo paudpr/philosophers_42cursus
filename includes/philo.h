@@ -6,7 +6,7 @@
 /*   By: pdel-pin <pdel-pin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/23 16:13:44 by pdel-pin          #+#    #+#             */
-/*   Updated: 2022/09/23 16:13:45 by pdel-pin         ###   ########.fr       */
+/*   Updated: 2022/09/27 15:00:33 by pdel-pin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,10 +75,11 @@ void		do_threads(t_table *table);
 void		*do_philo(void *arg);
 
 void		do_eat(t_philos *philo);
-void		do_wait(t_table *table, int time);
+void		do_wait(t_philos *philo, int time);
 int			get_time(void);
 
 void		check_deaths(t_table *table);
+int			check_if_dead(t_philos *philo);
 
 void		do_print(t_philos *philo, int type);
 
