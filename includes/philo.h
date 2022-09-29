@@ -6,7 +6,7 @@
 /*   By: pdel-pin <pdel-pin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/23 16:13:44 by pdel-pin          #+#    #+#             */
-/*   Updated: 2022/09/27 15:00:33 by pdel-pin         ###   ########.fr       */
+/*   Updated: 2022/09/29 11:16:41 by pdel-pin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ typedef struct s_table
 	int				t_sleep;
 	int				n_eat;
 	int				all_eaten;
-	int				time_ref;
+	long int		time_ref;
 	int				check_dead;
 	pthread_mutex_t	dead;
 	pthread_mutex_t	print;
@@ -57,17 +57,19 @@ typedef struct s_table
 typedef struct s_philos
 {
 	int				id;
-	int				time;
+	long int		last_time;
 	int				n_eaten;
 	pthread_t		id_thread;
 	struct s_philos	*right_philo;
 	pthread_mutex_t	left_f;
+	pthread_mutex_t	eat;
+	pthread_mutex_t	time;
 	t_table			*table;
 }	t_philos;
 
 /* Functions */
 int			init_table(t_table *table, int argc, char **argv);
-void		init_philos(t_table *table, int i);
+t_philos	*init_philos(t_table *table);
 int			ckeck_args(int argc, char **argv);
 void		close_philos(t_table *table);
 
@@ -80,6 +82,7 @@ int			get_time(void);
 
 void		check_deaths(t_table *table);
 int			check_if_dead(t_philos *philo);
+int			check_eaten_all(t_philos *philo);
 
 void		do_print(t_philos *philo, int type);
 

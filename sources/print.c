@@ -6,7 +6,7 @@
 /*   By: pdel-pin <pdel-pin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/23 16:13:59 by pdel-pin          #+#    #+#             */
-/*   Updated: 2022/09/23 16:14:00 by pdel-pin         ###   ########.fr       */
+/*   Updated: 2022/09/29 10:42:36 by pdel-pin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ void	do_print(t_philos *philo, int type)
 
 	time = get_time() - philo->table->time_ref;
 	pthread_mutex_lock(&philo->table->print);
-	if (philo->table->check_dead == 0)
+	if (check_if_dead(philo) == 0)
 	{
 		printf("%d ms  ", time);
 		print_text(philo, type);
