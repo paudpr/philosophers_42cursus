@@ -13,7 +13,7 @@
 ## Status ✔️
 - Status: finished
 - Score: 100%
-- Observations: learned about threads fsjkdhgsdkgjhdslkgjhsdkgjhsdkg
+- Observations: learned about threads
 
 ## About the project 👩‍💻
 
